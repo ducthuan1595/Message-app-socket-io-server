@@ -11,8 +11,13 @@ const router = express_1.default.Router();
 const initial = (app) => {
     router.post("/login", auth_1.login);
     router.post("/signup", auth_1.signup);
-    // router.get("/get-all-user", getAllUser);
+    router.get("/search-user", auth_2.default, auth_1.getAllUser);
     router.post("/chat", auth_2.default, chat_1.chatsController);
+    router.get("/get-chat", auth_2.default, chat_1.getChatController);
+    router.post("/create-group-chat", auth_2.default, chat_1.createGroupChat);
+    router.post("/rename-group-chat", auth_2.default, chat_1.renameGroup);
+    router.post("/add-user-group-chat", auth_2.default, chat_1.addGroupChat);
+    router.post("/remove-user-group-chat", auth_2.default, chat_1.removeUserGroup);
     return app.use("/", router);
 };
 exports.default = initial;

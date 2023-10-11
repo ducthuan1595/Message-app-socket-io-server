@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.chatsController = void 0;
+exports.removeUserGroup = exports.addGroupChat = exports.renameGroup = exports.createGroupChat = exports.getChatController = exports.chatsController = void 0;
 const chat_1 = require("../service/chat");
 const chatsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.body;
@@ -22,3 +22,62 @@ const chatsController = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.chatsController = chatsController;
+const getChatController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = yield (0, chat_1.fetchChatService)(req);
+    if (data) {
+        res.status(data.status).json({ message: data.message, data: data === null || data === void 0 ? void 0 : data.data });
+    }
+});
+exports.getChatController = getChatController;
+const createGroupChat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { chatName, userId } = req.body;
+    if (!chatName || userId.length < 1) {
+        res.status(404).json({ message: "Not found" });
+    }
+    else {
+        const data = yield (0, chat_1.createGroupChatService)(chatName, userId, req);
+        if (data) {
+            res.status(data.status).json({ message: data.message, data: data === null || data === void 0 ? void 0 : data.data });
+        }
+    }
+});
+exports.createGroupChat = createGroupChat;
+const renameGroup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { chatId, chatName } = req.body;
+    if (!chatId || !chatName) {
+        res.status(404).json({ message: "Not found" });
+    }
+    else {
+        const data = yield (0, chat_1.renameGroupService)(chatId, chatName, req);
+        if (data) {
+            res.status(data.status).json({ message: data.message, data: data === null || data === void 0 ? void 0 : data.data });
+        }
+    }
+});
+exports.renameGroup = renameGroup;
+const addGroupChat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { chatId, userId } = req.body;
+    if (!chatId || !userId) {
+        res.status(404).json({ message: "Not found" });
+    }
+    else {
+        const data = yield (0, chat_1.addGroupChatService)(chatId, userId, req);
+        if (data) {
+            res.status(data.status).json({ message: data.message, data: data === null || data === void 0 ? void 0 : data.data });
+        }
+    }
+});
+exports.addGroupChat = addGroupChat;
+const removeUserGroup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { chatId, userId } = req.body;
+    if (!chatId || !userId) {
+        res.status(404).json({ message: "Not found" });
+    }
+    else {
+        const data = yield (0, chat_1.removeUserGroupService)(chatId, userId, req);
+        if (data) {
+            res.status(data.status).json({ message: data.message, data: data === null || data === void 0 ? void 0 : data.data });
+        }
+    }
+});
+exports.removeUserGroup = removeUserGroup;

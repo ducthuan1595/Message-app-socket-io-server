@@ -23,7 +23,10 @@ const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
             if (process.env.JWT_SECRET) {
                 const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
                 if (decoded && decoded.id) {
-                    req.user = yield user_1.default.findById(decoded.id).select("-password");
+                    const user = yield user_1.default.findById(decoded.id).select("-password");
+                    if (user) {
+                        req.user = user;
+                    }
                     next();
                 }
             }

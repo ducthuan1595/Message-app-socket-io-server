@@ -92,11 +92,17 @@ const getAllUserService = (key, req) => {
                     : {};
                 const users = yield user_1.default.find(keyword).find({
                     _id: { $ne: req.user._id },
-                });
+                }); // Not get current user
                 resolve({
                     status: 200,
                     message: "ok",
                     data: users,
+                });
+            }
+            else {
+                resolve({
+                    status: 403,
+                    message: "Unauthorized",
                 });
             }
         }

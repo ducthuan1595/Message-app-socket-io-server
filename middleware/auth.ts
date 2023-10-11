@@ -4,7 +4,7 @@ import User from "../model/user";
 import { UserType } from "../types";
 
 export interface RequestUserType extends Request {
-  user: UserType;
+  user?: UserType;
 }
 
 const protect = async (
@@ -23,7 +23,12 @@ const protect = async (
         const decoded: any = jwt.verify(token, process.env.JWT_SECRET);
 
         if (decoded && decoded.id) {
-          req.user = await User.findById(decoded.id).select("-password");
+          const user: UserType = await User.findById(decoded.id).select(
+            "-password"
+          );
+          if (user) {
+            req.user = user;
+          }
           next();
         }
       }

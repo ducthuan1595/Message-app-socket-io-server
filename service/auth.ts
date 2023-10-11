@@ -90,11 +90,16 @@ export const getAllUserService = (
           : {};
         const users = await User.find(keyword).find({
           _id: { $ne: req.user._id },
-        });
+        }); // Not get current user
         resolve({
           status: 200,
           message: "ok",
           data: users,
+        });
+      } else {
+        resolve({
+          status: 403,
+          message: "Unauthorized",
         });
       }
     } catch (err) {

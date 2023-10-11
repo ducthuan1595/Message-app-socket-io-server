@@ -11,7 +11,7 @@ export interface UserType {
   name: String;
   email: String;
   password?: String;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: NativeDate;
+  updatedAt: NativeDate;
   pic?: String;
 }
