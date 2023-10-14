@@ -8,6 +8,10 @@ const schema = new mongoose.Schema(
     },
     content: {
       type: String,
+      trim: true,
+    },
+    chatId: {
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Chat",
     },
   },

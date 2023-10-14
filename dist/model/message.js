@@ -11,6 +11,10 @@ const schema = new mongoose_1.default.Schema({
     },
     content: {
         type: String,
+        trim: true,
+    },
+    chatId: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
         ref: "Chat",
     },
 }, { timestamps: true });

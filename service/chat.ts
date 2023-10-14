@@ -77,6 +77,8 @@ export const fetchChatService = (req: RequestUserType) => {
             path: "latestMessage.sender",
             select: "name pic email",
           });
+          // console.log({ data });
+
           resolve({
             status: 200,
             message: "ok",
@@ -105,7 +107,7 @@ export const createGroupChatService = (
       if (req.user) {
         if (userId.length < 2) {
           resolve({
-            status: 400,
+            status: 200,
             message: "Must more than 2 users",
           });
         }
@@ -174,18 +176,17 @@ export const renameGroupService = (
 
 export const addGroupChatService = (
   chatId: string,
-  userId: string,
+  userId: string[],
   req: RequestUserType
 ) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (req.user) {
+        const userArrId = userId.concat([req.user._id.toString()]);
         const added = await Chat.findByIdAndUpdate(
           chatId,
           {
-            $push: {
-              users: userId,
-            },
+            users: userArrId,
           },
           { new: true }
         )
@@ -207,7 +208,6 @@ export const addGroupChatService = (
 
 export const removeUserGroupService = (
   chatId: string,
-  userId: string,
   req: RequestUserType
 ) => {
   return new Promise(async (resolve, reject) => {
@@ -217,7 +217,7 @@ export const removeUserGroupService = (
           chatId,
           {
             $pull: {
-              users: userId,
+              users: req.user._id,
             },
           },
           { new: true }

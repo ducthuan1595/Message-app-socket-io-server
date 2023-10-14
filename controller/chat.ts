@@ -14,6 +14,7 @@ import {
 
 export const chatsController = async (req: RequestUserType, res: Response) => {
   const { userId } = req.body;
+
   if (!userId) {
     res.status(404).json({ message: "Not found" });
   }
@@ -59,7 +60,8 @@ export const renameGroup = async (req: RequestUserType, res: Response) => {
 
 export const addGroupChat = async (req: RequestUserType, res: Response) => {
   const { chatId, userId } = req.body;
-  if (!chatId || !userId) {
+
+  if (!chatId || userId.length < 2) {
     res.status(404).json({ message: "Not found" });
   } else {
     const data: any = await addGroupChatService(chatId, userId, req);
@@ -70,11 +72,11 @@ export const addGroupChat = async (req: RequestUserType, res: Response) => {
 };
 
 export const removeUserGroup = async (req: RequestUserType, res: Response) => {
-  const { chatId, userId } = req.body;
-  if (!chatId || !userId) {
+  const { chatId } = req.body;
+  if (!chatId) {
     res.status(404).json({ message: "Not found" });
   } else {
-    const data: any = await removeUserGroupService(chatId, userId, req);
+    const data: any = await removeUserGroupService(chatId, req);
     if (data) {
       res.status(data.status).json({ message: data.message, data: data?.data });
     }

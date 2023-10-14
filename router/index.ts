@@ -9,6 +9,7 @@ import {
   removeUserGroup,
 } from "../controller/chat";
 import { login, signup, getAllUser } from "../controller/auth";
+import { sendMessage, getMessage } from "../controller/message";
 import protect from "../middleware/auth";
 
 const router = express.Router();
@@ -21,9 +22,12 @@ const initial = (app: Express) => {
   router.post("/chat", protect, chatsController);
   router.get("/get-chat", protect, getChatController);
   router.post("/create-group-chat", protect, createGroupChat);
-  router.post("/rename-group-chat", protect, renameGroup);
-  router.post("/add-user-group-chat", protect, addGroupChat);
-  router.post("/remove-user-group-chat", protect, removeUserGroup);
+  router.put("/rename-group-chat", protect, renameGroup);
+  router.post("/update-user-group-chat", protect, addGroupChat);
+  router.put("/leave-user-group-chat", protect, removeUserGroup);
+
+  router.post("/sent-message", protect, sendMessage);
+  router.get("/get-message", protect, getMessage);
 
   return app.use("/", router);
 };

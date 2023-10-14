@@ -57,7 +57,7 @@ const renameGroup = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.renameGroup = renameGroup;
 const addGroupChat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { chatId, userId } = req.body;
-    if (!chatId || !userId) {
+    if (!chatId || userId.length < 2) {
         res.status(404).json({ message: "Not found" });
     }
     else {
@@ -69,12 +69,12 @@ const addGroupChat = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.addGroupChat = addGroupChat;
 const removeUserGroup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { chatId, userId } = req.body;
-    if (!chatId || !userId) {
+    const { chatId } = req.body;
+    if (!chatId) {
         res.status(404).json({ message: "Not found" });
     }
     else {
-        const data = yield (0, chat_1.removeUserGroupService)(chatId, userId, req);
+        const data = yield (0, chat_1.removeUserGroupService)(chatId, req);
         if (data) {
             res.status(data.status).json({ message: data.message, data: data === null || data === void 0 ? void 0 : data.data });
         }

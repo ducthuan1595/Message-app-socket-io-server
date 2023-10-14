@@ -93,6 +93,7 @@ const fetchChatService = (req) => {
                         path: "latestMessage.sender",
                         select: "name pic email",
                     });
+                    // console.log({ data });
                     resolve({
                         status: 200,
                         message: "ok",
@@ -119,7 +120,7 @@ const createGroupChatService = (chatName, userId, req) => {
             if (req.user) {
                 if (userId.length < 2) {
                     resolve({
-                        status: 400,
+                        status: 200,
                         message: "Must more than 2 users",
                     });
                 }
@@ -184,10 +185,9 @@ const addGroupChatService = (chatId, userId, req) => {
     return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             if (req.user) {
+                const userArrId = userId.concat([req.user._id.toString()]);
                 const added = yield chat_1.default.findByIdAndUpdate(chatId, {
-                    $push: {
-                        users: userId,
-                    },
+                    users: userArrId,
                 }, { new: true })
                     .populate("users", "-password")
                     .populate("groupAdmin", "-password");
@@ -206,13 +206,13 @@ const addGroupChatService = (chatId, userId, req) => {
     }));
 };
 exports.addGroupChatService = addGroupChatService;
-const removeUserGroupService = (chatId, userId, req) => {
+const removeUserGroupService = (chatId, req) => {
     return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             if (req.user) {
                 const added = yield chat_1.default.findByIdAndUpdate(chatId, {
                     $pull: {
-                        users: userId,
+                        users: req.user._id,
                     },
                 }, { new: true })
                     .populate("users", "-password")

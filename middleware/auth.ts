@@ -3,6 +3,11 @@ import { Express, Request, Response, NextFunction } from "express";
 import User from "../model/user";
 import { UserType } from "../types";
 
+export interface QueryParams {
+  chatId?: string;
+  UserId?: number;
+}
+
 export interface RequestUserType extends Request {
   user?: UserType;
 }
@@ -29,6 +34,7 @@ const protect = async (
           if (user) {
             req.user = user;
           }
+
           next();
         }
       }
@@ -37,6 +43,8 @@ const protect = async (
 
       res.status(403).json({ message: "Not authorized" });
     }
+  } else {
+    res.status(404).json({ message: "Not found" });
   }
 };
 

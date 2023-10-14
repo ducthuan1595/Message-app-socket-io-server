@@ -36,5 +36,8 @@ const protect = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
             res.status(403).json({ message: "Not authorized" });
         }
     }
+    else {
+        res.status(404).json({ message: "Not found" });
+    }
 });
 exports.default = protect;
