@@ -16,3 +16,4 @@
 - client: javascript, reactJs, tailwind
 - server: typescript, nodeJs(express)
 - database: mongoDB(mongoose)
+- direct: socket.io

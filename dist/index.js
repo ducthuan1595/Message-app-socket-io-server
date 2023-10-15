@@ -23,6 +23,9 @@ app.get("/", (req, res) => {
     res.send("Express Typescript Server");
 });
 (0, router_1.default)(app);
+app.use("/", (req, res) => {
+    res.send("Hello world");
+});
 // const server = app.listen(port, () => {
 //   console.log("Server is running on" + port);
 // });
@@ -40,7 +43,7 @@ if (url_mongoDB) {
 const io = new socket_io_1.Server(httpServer, {
     cors: {
         origin: "*",
-        credentials: true,
+        // credentials: true,
     },
 });
 // socketIo(io);
