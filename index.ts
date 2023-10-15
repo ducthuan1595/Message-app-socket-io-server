@@ -29,6 +29,10 @@ app.get("/", (req: Request, res: Response) => {
 
 initial(app);
 
+app.use("/", (req, res) => {
+  res.send("Hello world");
+});
+
 // const server = app.listen(port, () => {
 //   console.log("Server is running on" + port);
 // });
@@ -48,7 +52,7 @@ if (url_mongoDB) {
 const io = new Server(httpServer, {
   cors: {
     origin: "*",
-    credentials: true,
+    // credentials: true,
   },
 });
 
