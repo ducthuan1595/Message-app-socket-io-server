@@ -13,10 +13,12 @@ const initial = (app) => {
     router.post("/login", auth_1.login);
     router.post("/signup", auth_1.signup);
     router.get("/search-user", auth_2.default, auth_1.getAllUser);
+    router.post("/edit-user", auth_2.default, auth_1.editUser);
     router.post("/chat", auth_2.default, chat_1.chatsController);
     router.get("/get-chat", auth_2.default, chat_1.getChatController);
     router.post("/create-group-chat", auth_2.default, chat_1.createGroupChat);
     router.put("/rename-group-chat", auth_2.default, chat_1.renameGroup);
+    router.delete("/delete-group-chat", auth_2.default, chat_1.deleteGroupChat);
     router.post("/update-user-group-chat", auth_2.default, chat_1.addGroupChat);
     router.put("/leave-user-group-chat", auth_2.default, chat_1.removeUserGroup);
     router.post("/sent-message", auth_2.default, message_1.sendMessage);

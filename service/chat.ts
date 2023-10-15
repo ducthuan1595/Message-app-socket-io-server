@@ -6,7 +6,8 @@ import { UserType } from "../types";
 export const chatService = (id: string, req: RequestUserType) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (req && req.user) {
+      const sender = await User.findById(id);
+      if (req && req.user && sender) {
         let isChat: any = await Chat.find({
           isGroupChat: false,
           $and: [
@@ -21,14 +22,18 @@ export const chatService = (id: string, req: RequestUserType) => {
           select: "name pic email",
         });
         if (isChat.length) {
+          console.log(isChat);
+
           resolve({
             status: 200,
             message: "ok",
-            data: isChat[0],
+            data: isChat,
           });
         } else {
+          console.log("new");
+
           let chatData = {
-            chatName: "sender",
+            chatName: sender.name,
             isGroupChat: false,
             users: [req.user._id, id],
           };
@@ -182,21 +187,32 @@ export const addGroupChatService = (
   return new Promise(async (resolve, reject) => {
     try {
       if (req.user) {
-        const userArrId = userId.concat([req.user._id.toString()]);
-        const added = await Chat.findByIdAndUpdate(
-          chatId,
-          {
-            users: userArrId,
-          },
-          { new: true }
-        )
-          .populate("users", "-password")
-          .populate("groupAdmin", "-password");
-        if (added) {
+        const adminGroup = await Chat.findById(chatId);
+        if (
+          adminGroup &&
+          adminGroup.groupAdmin?.toString() === req.user._id.toString()
+        ) {
+          const userArrId = userId.concat([req.user._id.toString()]);
+          const added = await Chat.findByIdAndUpdate(
+            chatId,
+            {
+              users: userArrId,
+            },
+            { new: true }
+          )
+            .populate("users", "-password")
+            .populate("groupAdmin", "-password");
+          if (added) {
+            resolve({
+              status: 200,
+              message: "ok",
+              data: added,
+            });
+          }
+        } else {
           resolve({
-            status: 200,
-            message: "ok",
-            data: added,
+            status: 403,
+            message: "Unauthorized",
           });
         }
       }
@@ -231,6 +247,21 @@ export const removeUserGroupService = (
             data: added,
           });
         }
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+export const deleteGroupChatService = (
+  chatId: string,
+  req: RequestUserType
+) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (req.user) {
+        const chat = await Chat.findById(chatId);
       }
     } catch (err) {
       reject(err);

@@ -4,6 +4,7 @@ import {
   loginService,
   signupService,
   getAllUserService,
+  editUserService,
 } from "../service/auth";
 
 import { ResponseType } from "../types";
@@ -58,5 +59,13 @@ export const getAllUser = async (req: RequestUserType, res: Response) => {
   const data: any = await getAllUserService(key, req);
   if (data) {
     res.status(data.status).json({ message: data.message, data: data.data });
+  }
+};
+
+export const editUser = async (req: RequestUserType, res: Response) => {
+  const { name, pic } = req.body;
+  const data: any = await editUserService(name, pic, req);
+  if (data) {
+    res.status(data.status).json({ message: data.message, data: data?.data });
   }
 };

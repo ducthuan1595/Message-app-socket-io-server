@@ -107,3 +107,35 @@ export const getAllUserService = (
     }
   });
 };
+
+export const editUserService = (
+  name: string,
+  pic: string,
+  req: RequestUserType
+) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (req.user) {
+        let updateUser;
+        if (name) {
+          updateUser = await User.findByIdAndUpdate(req.user._id, {
+            name,
+          }).select("-password");
+        }
+        if (pic) {
+          updateUser = await User.findByIdAndUpdate(req.user._id, {
+            pic,
+          }).select("-password");
+        }
+
+        resolve({
+          status: 201,
+          message: "ok",
+          data: updateUser,
+        });
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};

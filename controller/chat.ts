@@ -10,6 +10,7 @@ import {
   renameGroupService,
   addGroupChatService,
   removeUserGroupService,
+  deleteGroupChatService,
 } from "../service/chat";
 
 export const chatsController = async (req: RequestUserType, res: Response) => {
@@ -79,6 +80,18 @@ export const removeUserGroup = async (req: RequestUserType, res: Response) => {
     const data: any = await removeUserGroupService(chatId, req);
     if (data) {
       res.status(data.status).json({ message: data.message, data: data?.data });
+    }
+  }
+};
+
+export const deleteGroupChat = async (req: RequestUserType, res: Response) => {
+  const chatId = req.query.chatId;
+  if (typeof chatId !== "string") {
+    res.status(404).json({ message: "Not found" });
+  } else {
+    const data: any = await deleteGroupChatService(chatId, req);
+    if (data) {
+      res.status(data.status).json({ message: data.message });
     }
   }
 };

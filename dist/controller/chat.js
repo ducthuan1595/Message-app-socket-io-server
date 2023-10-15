@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeUserGroup = exports.addGroupChat = exports.renameGroup = exports.createGroupChat = exports.getChatController = exports.chatsController = void 0;
+exports.deleteGroupChat = exports.removeUserGroup = exports.addGroupChat = exports.renameGroup = exports.createGroupChat = exports.getChatController = exports.chatsController = void 0;
 const chat_1 = require("../service/chat");
 const chatsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.body;
@@ -81,3 +81,16 @@ const removeUserGroup = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.removeUserGroup = removeUserGroup;
+const deleteGroupChat = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const chatId = req.query.chatId;
+    if (typeof chatId !== "string") {
+        res.status(404).json({ message: "Not found" });
+    }
+    else {
+        const data = yield (0, chat_1.deleteGroupChatService)(chatId, req);
+        if (data) {
+            res.status(data.status).json({ message: data.message });
+        }
+    }
+});
+exports.deleteGroupChat = deleteGroupChat;

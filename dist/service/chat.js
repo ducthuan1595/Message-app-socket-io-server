@@ -12,13 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeUserGroupService = exports.addGroupChatService = exports.renameGroupService = exports.createGroupChatService = exports.fetchChatService = exports.chatService = void 0;
+exports.deleteGroupChatService = exports.removeUserGroupService = exports.addGroupChatService = exports.renameGroupService = exports.createGroupChatService = exports.fetchChatService = exports.chatService = void 0;
 const chat_1 = __importDefault(require("../model/chat"));
 const user_1 = __importDefault(require("../model/user"));
 const chatService = (id, req) => {
     return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            if (req && req.user) {
+            const sender = yield user_1.default.findById(id);
+            if (req && req.user && sender) {
                 let isChat = yield chat_1.default.find({
                     isGroupChat: false,
                     $and: [
@@ -33,15 +34,17 @@ const chatService = (id, req) => {
                     select: "name pic email",
                 });
                 if (isChat.length) {
+                    console.log(isChat);
                     resolve({
                         status: 200,
                         message: "ok",
-                        data: isChat[0],
+                        data: isChat,
                     });
                 }
                 else {
+                    console.log("new");
                     let chatData = {
-                        chatName: "sender",
+                        chatName: sender.name,
                         isGroupChat: false,
                         users: [req.user._id, id],
                     };
@@ -183,19 +186,30 @@ const renameGroupService = (chatId, chatName, req) => {
 exports.renameGroupService = renameGroupService;
 const addGroupChatService = (chatId, userId, req) => {
     return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
         try {
             if (req.user) {
-                const userArrId = userId.concat([req.user._id.toString()]);
-                const added = yield chat_1.default.findByIdAndUpdate(chatId, {
-                    users: userArrId,
-                }, { new: true })
-                    .populate("users", "-password")
-                    .populate("groupAdmin", "-password");
-                if (added) {
+                const adminGroup = yield chat_1.default.findById(chatId);
+                if (adminGroup &&
+                    ((_a = adminGroup.groupAdmin) === null || _a === void 0 ? void 0 : _a.toString()) === req.user._id.toString()) {
+                    const userArrId = userId.concat([req.user._id.toString()]);
+                    const added = yield chat_1.default.findByIdAndUpdate(chatId, {
+                        users: userArrId,
+                    }, { new: true })
+                        .populate("users", "-password")
+                        .populate("groupAdmin", "-password");
+                    if (added) {
+                        resolve({
+                            status: 200,
+                            message: "ok",
+                            data: added,
+                        });
+                    }
+                }
+                else {
                     resolve({
-                        status: 200,
-                        message: "ok",
-                        data: added,
+                        status: 403,
+                        message: "Unauthorized",
                     });
                 }
             }
@@ -232,3 +246,16 @@ const removeUserGroupService = (chatId, req) => {
     }));
 };
 exports.removeUserGroupService = removeUserGroupService;
+const deleteGroupChatService = (chatId, req) => {
+    return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            if (req.user) {
+                const chat = yield chat_1.default.findById(chatId);
+            }
+        }
+        catch (err) {
+            reject(err);
+        }
+    }));
+};
+exports.deleteGroupChatService = deleteGroupChatService;

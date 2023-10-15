@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllUserService = exports.signupService = exports.loginService = void 0;
+exports.editUserService = exports.getAllUserService = exports.signupService = exports.loginService = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_1 = __importDefault(require("../model/user"));
 const generalToken_1 = __importDefault(require("../config/generalToken"));
@@ -112,3 +112,31 @@ const getAllUserService = (key, req) => {
     }));
 };
 exports.getAllUserService = getAllUserService;
+const editUserService = (name, pic, req) => {
+    return new Promise((resolve, reject) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            if (req.user) {
+                let updateUser;
+                if (name) {
+                    updateUser = yield user_1.default.findByIdAndUpdate(req.user._id, {
+                        name,
+                    }).select("-password");
+                }
+                if (pic) {
+                    updateUser = yield user_1.default.findByIdAndUpdate(req.user._id, {
+                        pic,
+                    }).select("-password");
+                }
+                resolve({
+                    status: 201,
+                    message: "ok",
+                    data: updateUser,
+                });
+            }
+        }
+        catch (err) {
+            reject(err);
+        }
+    }));
+};
+exports.editUserService = editUserService;
